@@ -3,44 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QA Pilot — Team Login</title>
+  <title>QA Pilot Academy — Team Login</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #f0f4f9 0%, #e2e8f0 100%);
       min-height: 100vh;
+      display: flex;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    /* ── LEFT HERO ── */
+    .login-hero {
+      width: 55%;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #7c3aed 100%);
+    }
+    @media (max-width: 1024px) { .login-hero { display: none; } }
+
+    .login-hero::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .login-hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 450px;
+      width: 100%;
+      padding: 0 24px;
+    }
+    .login-hero-logo {
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      margin: 0 auto 32px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
-    .card {
-      background: #fff;
-      border: 1px solid #e2e6f0;
-      border-radius: 16px;
-      padding: 40px 36px;
-      width: 100%;
-      max-width: 440px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    .login-hero-logo svg { width: 48px; height: 48px; }
+    .login-hero h2 {
+      font-size: 44px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 16px;
     }
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #2563eb;
-      color: #fff;
-      border-radius: 8px;
-      padding: 4px 12px;
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 8px;
+    .login-hero p {
+      font-size: 18px;
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 32px;
     }
-    h1 { font-size: 22px; margin-bottom: 4px; }
-    .sub { font-size: 14px; color: #6b7280; margin-bottom: 28px; }
+    .hero-features {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .hero-feature {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 16px 20px;
+      min-width: 120px;
+    }
+    .hero-feature .num {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .hero-feature .label {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
 
-    /* Upload area */
+    /* ── RIGHT FORM ── */
+    .login-form {
+      width: 45%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+    }
+    @media (max-width: 1024px) { .login-form { width: 100%; } }
+
+    .form-card {
+      width: 100%;
+      max-width: 420px;
+    }
+    .form-card h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1a1f2e;
+      margin-bottom: 4px;
+    }
+    .form-card .sub {
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* Upload zone */
     .upload-zone {
       border: 2px dashed #d1d5db;
       border-radius: 12px;
@@ -48,7 +132,7 @@
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
-      background: #fafbfc;
+      background: #f9fafb;
       margin-bottom: 20px;
     }
     .upload-zone:hover, .upload-zone.drag-over {
@@ -68,27 +152,27 @@
     /* Name field */
     .name-section { margin-bottom: 20px; }
     .name-section label {
-      font-size: 13px; font-weight: 600; color: #374151;
+      font-size: 14px; font-weight: 600; color: #1f2937;
       display: block; margin-bottom: 6px;
     }
     .name-input {
       width: 100%;
-      border: 2px solid #e2e6f0;
-      border-radius: 10px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
       padding: 12px 14px;
       font-size: 16px;
       transition: border-color 0.2s;
     }
     .name-input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 
-    /* Name suggestions dropdown */
     .name-suggestions {
-      border: 1px solid #e2e6f0;
+      border: 1px solid #e5e7eb;
       border-radius: 8px;
       max-height: 180px;
       overflow-y: auto;
       display: none;
       margin-top: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
     .name-suggestions.show { display: block; }
     .name-suggestion-item {
@@ -99,19 +183,16 @@
       transition: background 0.15s;
     }
     .name-suggestion-item:last-child { border-bottom: none; }
-    .name-suggestion-item:hover, .name-suggestion-item.active {
-      background: #eff6ff;
-      color: #2563eb;
-    }
+    .name-suggestion-item:hover { background: #eff6ff; color: #2563eb; }
 
     .login-btn {
       width: 100%;
-      padding: 14px;
-      background: #2563eb;
+      padding: 13px;
+      background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
       color: #fff;
       border: none;
-      border-radius: 10px;
-      font-size: 16px;
+      border-radius: 8px;
+      font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s;
@@ -119,59 +200,91 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.25);
     }
-    .login-btn:hover { background: #1d4ed8; box-shadow: 0 4px 16px rgba(37,99,235,0.3); }
-    .login-btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+    .login-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.35); }
+    .login-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
     .status {
       font-size: 13px;
-      margin-top: 12px;
+      margin-top: 14px;
       text-align: center;
       display: none;
+      padding: 10px 14px;
+      border-radius: 8px;
     }
-    .status.error { color: #dc2626; display: block; }
-    .status.success { color: #16a34a; display: block; }
-    .status.info { color: #2563eb; display: block; }
+    .status.error { display: block; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .status.success { display: block; background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    .status.info { display: block; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
 
     .hidden-input { display: none; }
+
+    .trainer-link {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+    }
+    .trainer-link a {
+      font-size: 13px;
+      color: #9ca3af;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .trainer-link a:hover { color: #2563eb; }
   </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">QA Pilot</div>
-  <h1>Team Login</h1>
-  <p class="sub">Upload your class file and enter your name to get started.</p>
-
-  <!-- Upload Zone -->
-  <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
-    <div class="upload-icon">📁</div>
-    <div class="upload-text">Upload Class File</div>
-    <div class="upload-hint">Click to select the .json file your trainer sent you</div>
-    <div class="upload-file-name" id="file-name"></div>
-    <div class="upload-error" id="file-error"></div>
-  </div>
-  <input type="file" id="file-input" class="hidden-input" accept=".json" onchange="handleFile(event)">
-
-  <!-- Name -->
-  <div class="name-section">
-    <label for="name-input">Your Name</label>
-    <input type="text" id="name-input" class="name-input" placeholder="Type your name…" autocomplete="off" oninput="onNameInput()">
-    <div class="name-suggestions" id="name-suggestions"></div>
+  <!-- LEFT HERO -->
+  <div class="login-hero">
+    <div class="login-hero-content">
+      <div class="login-hero-logo">
+        <svg viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="12" fill="url(#lg)" />
+          <path d="M14 24l7 7 13-13" stroke="#2563eb" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="48" y2="48"><stop stop-color="#2563eb"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>
+        </svg>
+      </div>
+      <h2>QA Pilot Academy</h2>
+      <p>Your hands-on training platform for software testing, bug reporting, and quality assurance.</p>
+      <div class="hero-features">
+        <div class="hero-feature"><div class="num">8</div><div class="label">Courses</div></div>
+        <div class="hero-feature"><div class="num">3</div><div class="label">Scenarios</div></div>
+        <div class="hero-feature"><div class="num">+50</div><div class="label">Lessons</div></div>
+      </div>
+    </div>
   </div>
 
-  <button class="login-btn" id="login-btn" disabled onclick="login()">
-    → Login
-  </button>
+  <!-- RIGHT FORM -->
+  <div class="login-form">
+    <div class="form-card">
+      <h1>Team Login</h1>
+      <p class="sub">Upload your class file and enter your name to get started.</p>
 
-  <div class="status" id="status"></div>
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+        <div class="upload-icon">📁</div>
+        <div class="upload-text">Upload Class File</div>
+        <div class="upload-hint">Click to select the .json file your trainer sent you</div>
+        <div class="upload-file-name" id="file-name"></div>
+        <div class="upload-error" id="file-error"></div>
+      </div>
+      <input type="file" id="file-input" class="hidden-input" accept=".json" onchange="handleFile(event)">
 
-  <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e2e6f0;text-align:center;">
-    <a href="admin/simple.html" style="font-size:13px;color:#9ca3af;text-decoration:none;transition:color 0.2s;"
-       onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#9ca3af'">
-      Trainer Dashboard →
-    </a>
+      <div class="name-section">
+        <label for="name-input">Your Name</label>
+        <input type="text" id="name-input" class="name-input" placeholder="Type your name…" autocomplete="off" oninput="onNameInput()">
+        <div class="name-suggestions" id="name-suggestions"></div>
+      </div>
+
+      <button class="login-btn" id="login-btn" disabled onclick="login()">→ Login</button>
+
+      <div class="status" id="status"></div>
+
+      <div class="trainer-link">
+        <a href="admin/simple.html">Trainer Dashboard →</a>
+      </div>
+    </div>
   </div>
-</div>
 
 <script src="js/db.js"></script>
 <script src="js/app.js"></script>
@@ -180,7 +293,6 @@ var _classData = null;
 var _students = [];
 var _selectedStudent = null;
 
-// ── File handling ──
 function handleFile(event) {
   var file = event.target.files[0];
   if (!file) return;
@@ -215,11 +327,9 @@ function showFileError(msg) {
   document.getElementById('file-name').textContent = '';
 }
 
-// ── Name entry with suggestions ──
 function onNameInput() {
   var val = document.getElementById('name-input').value.trim();
   var suggestions = document.getElementById('name-suggestions');
-
   if (!val || _students.length === 0) {
     suggestions.classList.remove('show');
     suggestions.innerHTML = '';
@@ -227,12 +337,10 @@ function onNameInput() {
     checkReady();
     return;
   }
-
   var lower = val.toLowerCase();
   var matches = _students.filter(function(s) {
     return s.name.toLowerCase().indexOf(lower) !== -1;
   });
-
   if (matches.length === 0) {
     suggestions.classList.remove('show');
     suggestions.innerHTML = '';
@@ -240,8 +348,6 @@ function onNameInput() {
     checkReady();
     return;
   }
-
-  // Check for exact match
   var exact = matches.find(function(s) { return s.name.toLowerCase() === lower; });
   if (exact) {
     _selectedStudent = exact;
@@ -249,12 +355,10 @@ function onNameInput() {
     checkReady();
     return;
   }
-
   _selectedStudent = null;
   var html = '';
   matches.forEach(function(s) {
-    html += '<div class="name-suggestion-item" onclick="selectSuggestion(\'' + escapeJsStr(s.name) + '\')">' +
-      escapeHtml(s.name) + '</div>';
+    html += '<div class="name-suggestion-item" onclick="selectSuggestion(\'' + escapeJsStr(s.name) + '\')">' + escapeHtml(s.name) + '</div>';
   });
   suggestions.innerHTML = html;
   suggestions.classList.add('show');
@@ -269,11 +373,9 @@ function selectSuggestion(name) {
 }
 
 function checkReady() {
-  var btn = document.getElementById('login-btn');
-  btn.disabled = !(_classData && _selectedStudent);
+  document.getElementById('login-btn').disabled = !(_classData && _selectedStudent);
 }
 
-// ── Login ──
 async function login() {
   if (!_classData || !_selectedStudent) return;
   var btn = document.getElementById('login-btn');
@@ -284,19 +386,13 @@ async function login() {
   status.textContent = 'Setting up your account…';
 
   try {
-    // The simple class file doesn't include passwords — use a dummy
     var dummyHash = 'simple:no-password-required';
     var student = _selectedStudent;
     var courseIds = _classData.courseIds || [];
-
-    // Ensure DB is ready
     await initDB();
 
-    // Check if student already exists
     var existing = null;
-    if (student.email) {
-      existing = await findStudentByEmail(student.email);
-    }
+    if (student.email) { existing = await findStudentByEmail(student.email); }
 
     if (existing) {
       status.textContent = 'Welcome back! Signing you in…';
@@ -305,37 +401,27 @@ async function login() {
       return;
     }
 
-    // Generate caseId if not in file (for simple v2 files that have them)
     var caseId = student.caseId || await generateNextCaseId();
-
-    // Create student record
     var today = new Date().toISOString().split('T')[0];
     var studentRecord = {
-      caseId:      caseId,
-      name:        student.name,
-      email:       student.email || (student.name.toLowerCase().replace(/\s+/g, '.') + '@student.local'),
-      password:    dummyHash,
-      role:        student.role || 'junior',
-      cohort:      _classData.cohort || '',
+      caseId: caseId,
+      name: student.name,
+      email: student.email || (student.name.toLowerCase().replace(/\s+/g, '.') + '@student.local'),
+      password: dummyHash,
+      role: student.role || 'junior',
+      cohort: _classData.cohort || '',
       dateCreated: today,
-      active:      true,
+      active: true,
     };
-
     await saveStudent(studentRecord);
-
-    // Enroll in courses
-    for (var i = 0; i < courseIds.length; i++) {
-      await enrollStudent(caseId, courseIds[i]);
-    }
-
-    // Save org settings if provided
-    if (_classData.orgName)         await saveSetting('orgName', _classData.orgName);
+    for (var i = 0; i < courseIds.length; i++) { await enrollStudent(caseId, courseIds[i]); }
+    if (_classData.orgName) await saveSetting('orgName', _classData.orgName);
     if (_classData.instructorEmail) await saveSetting('instructorEmail', _classData.instructorEmail);
 
+    status.className = 'status success';
     status.textContent = '✓ Account created! Taking you to your courses…';
     startSession(studentRecord);
     window.location.href = 'portal.html';
-
   } catch(err) {
     console.error('Simple login failed:', err);
     status.className = 'status error';
@@ -345,7 +431,6 @@ async function login() {
   }
 }
 
-// ── Utilities ──
 function escapeHtml(text) {
   var d = document.createElement('div');
   d.appendChild(document.createTextNode(text));
@@ -355,12 +440,7 @@ function escapeJsStr(s) {
   return (s || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
 
-// ── Bootstrap ──
-initDB().catch(function(e) {
-  console.error('DB init failed:', e);
-  document.getElementById('status').className = 'status error';
-  document.getElementById('status').textContent = 'Could not initialize. Try opening via a local server (not file://).';
-});
+try { initDB().catch(function(e) { console.error('DB init failed:', e); }); } catch(e) {}
 </script>
 </body>
 </html>
