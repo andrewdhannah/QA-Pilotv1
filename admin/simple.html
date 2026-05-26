@@ -3,266 +3,423 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QA Pilot — Trainer Dashboard</title>
+  <title>QA Pilot Academy — Trainer Dashboard</title>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f0f4f9;
-      color: #1a1f2e;
-      padding: 32px 24px 80px;
-    }
-    .wrap { max-width: 800px; margin: 0 auto; }
+  <link rel="stylesheet" href="../css/main.css">
 
-    h1 { font-size: 24px; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
-    .sub { color: #6b7280; font-size: 14px; margin-bottom: 28px; }
+  <style>
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-6);
+      background: linear-gradient(90deg, #ffffff 0%, #f9fafb 100%);
+      border-bottom: 2px solid #e5e7eb;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+    .topbar-brand {
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      color: var(--color-ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar-brand .badge {
+      background: #2563eb;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .topbar-right {
+      font-size: var(--text-sm);
+      color: var(--color-ink-muted);
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .topbar-right a {
+      color: var(--color-ink-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .topbar-right a:hover { color: var(--color-primary); }
+
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      color: #dc2626;
+      background: #fef2f2;
+      border: 2px solid #fca5a5;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-logout:hover {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: #b91c1c;
+      transform: translateY(-1px);
+    }
+
+    .btn-switch-dash {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 14px;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      color: var(--color-primary);
+      background: var(--color-primary-light);
+      border: 2px solid #93c5fd;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-switch-dash:hover {
+      background: #dbeafe;
+      border-color: var(--color-primary);
+      color: #1e40af;
+      transform: translateY(-1px);
+    }
+
+    .main-content {
+      max-width: 900px;
+      margin: var(--space-8) auto;
+      padding: 0 var(--space-6);
+    }
+
+    .page-title {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-ink);
+      margin-bottom: var(--space-6);
+    }
 
     .card {
-      background: #fff;
-      border: 1px solid #e2e6f0;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      margin-bottom: var(--space-6);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .card-title {
-      font-size: 14px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: #6b7280;
-      margin-bottom: 16px;
+      color: var(--color-ink-muted);
+      margin-bottom: var(--space-4);
     }
+
+    .card-step {
+      border-left: 3px solid var(--color-primary);
+    }
+    .card-step .card-title { color: var(--color-primary); }
 
     textarea {
       width: 100%;
-      border: 2px solid #e2e6f0;
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 14px;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-3);
+      font-size: var(--text-sm);
       font-family: 'SF Mono', 'Menlo', monospace;
       resize: vertical;
       min-height: 120px;
       transition: border-color 0.2s;
     }
-    textarea:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
 
-    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+    .form-row {
+      display: flex;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: var(--space-3);
+    }
+    .form-group label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      color: var(--color-ink-soft);
+      display: block;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-group select,
+    .form-group input {
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      font-size: var(--text-sm);
+      transition: border-color 0.2s;
+    }
+    .form-group select:focus,
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
 
-    .btn {
-      display: inline-flex;
+    .course-checkboxes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+    .course-checkboxes label {
+      display: flex;
       align-items: center;
       gap: 6px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
+      font-size: var(--text-xs);
       cursor: pointer;
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
       transition: all 0.2s;
-      text-decoration: none;
+      user-select: none;
     }
-    .btn:hover { transform: translateY(-1px); }
-    .btn-primary { background: #2563eb; color: #fff; }
-    .btn-primary:hover { background: #1d4ed8; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
-    .btn-success { background: #16a34a; color: #fff; }
-    .btn-success:hover { background: #15803d; box-shadow: 0 4px 12px rgba(22,163,74,0.3); }
-    .btn-danger { background: #dc2626; color: #fff; }
-    .btn-danger:hover { background: #b91c1c; box-shadow: 0 4px 12px rgba(220,38,38,0.3); }
-    .btn-ghost { background: #f3f4f6; color: #374151; }
-    .btn-ghost:hover { background: #e5e7eb; }
-    .btn-lg { padding: 14px 32px; font-size: 16px; }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
+    .course-checkboxes label:hover {
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
     }
-    .badge-blue { background: #eff6ff; color: #2563eb; }
-    .badge-green { background: #f0fdf4; color: #16a34a; }
-    .badge-red { background: #fef2f2; color: #dc2626; }
+    .course-checkboxes input { accent-color: var(--color-primary); }
 
-    .student-list { margin-top: 12px; }
+    .student-list {
+      margin-top: var(--space-4);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
     .student-row {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 8px 0;
-      border-bottom: 1px solid #f3f4f6;
-      font-size: 14px;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-border);
+      font-size: var(--text-sm);
+      transition: background 0.15s;
     }
     .student-row:last-child { border-bottom: none; }
+    .student-row:hover { background: var(--color-bg); }
 
-    .course-checkboxes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-    .course-checkboxes label {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 13px; cursor: pointer;
-      padding: 6px 12px; border-radius: 8px;
-      background: #f9fafb; border: 1px solid #e5e7eb;
-      transition: all 0.2s;
+    .empty-state {
+      text-align: center;
+      padding: var(--space-6);
+      color: var(--color-ink-muted);
+      font-size: var(--text-sm);
     }
-    .course-checkboxes label:hover { border-color: #2563eb; background: #eff6ff; }
-    .course-checkboxes input:checked + span { color: #2563eb; font-weight: 600; }
-    .course-checkboxes input { accent-color: #2563eb; }
+
+    .download-card {
+      border: 2px solid var(--color-primary);
+      background: var(--color-primary-light);
+      text-align: center;
+      padding: var(--space-8);
+    }
+    .download-card .card-title { color: var(--color-primary); }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 36px;
+      background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(22,163,74,0.3);
+    }
+    .btn-download:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(22,163,74,0.4); }
+    .btn-download:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 
     .instructions ol {
-      margin: 8px 0 0 20px;
-      font-size: 14px;
-      line-height: 2;
-      color: #374151;
+      margin: var(--space-3) 0 0 var(--space-5);
+      font-size: var(--text-sm);
+      line-height: 2.2;
+      color: var(--color-ink-soft);
     }
-    .instructions li strong { color: #2563eb; }
-    .instructions .file-name {
-      background: #f3f4f6;
+    .instructions ol li strong { color: var(--color-primary); }
+    .instructions .file-code {
+      background: var(--color-bg);
       padding: 2px 8px;
       border-radius: 4px;
       font-family: monospace;
-      font-size: 13px;
+      font-size: 12px;
+      border: 1px solid var(--color-border);
     }
 
     .toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
+      bottom: var(--space-6);
+      right: var(--space-6);
+      padding: var(--space-3) var(--space-5);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
       color: #fff;
       box-shadow: 0 4px 16px rgba(0,0,0,0.15);
       animation: fadeIn 0.3s ease;
       z-index: 999;
     }
-    .toast.success { background: #16a34a; }
-    .toast.error { background: #dc2626; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .toast.success { background: var(--color-success); }
+    .toast.error { background: var(--color-error); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     .overlay {
       display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.4);
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
       z-index: 100;
       align-items: center;
       justify-content: center;
+      padding: var(--space-6);
     }
     .overlay.open { display: flex; }
     .modal {
-      background: #fff;
-      border-radius: 12px;
-      padding: 28px;
-      max-width: 400px;
-      width: 90%;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8);
+      max-width: 420px;
+      width: 100%;
       text-align: center;
+      box-shadow: var(--shadow-lg);
     }
-    .modal p { font-size: 14px; color: #6b7280; margin: 12px 0 20px; }
-    .modal .btns { display: flex; gap: 10px; justify-content: center; }
+    .modal h3 { font-size: var(--text-lg); color: var(--color-error); margin-bottom: var(--space-3); }
+    .modal p { font-size: var(--text-sm); color: var(--color-ink-soft); margin-bottom: var(--space-6); line-height: 1.6; }
+    .modal .btns { display: flex; gap: var(--space-3); justify-content: center; }
 
-    .empty-state { color: #9ca3af; font-size: 14px; text-align: center; padding: 20px 0; }
-
-    select, input[type="text"] {
-      border: 2px solid #e2e6f0;
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 14px;
-      transition: border-color 0.2s;
+    .student-count {
+      font-size: var(--text-xs);
+      color: var(--color-ink-muted);
     }
-    select:focus, input[type="text"]:focus { outline: none; border-color: #2563eb; }
   </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>
-    <span style="background:#2563eb;color:#fff;border-radius:8px;padding:4px 10px;font-size:14px;">QA Pilot</span>
-    Trainer Dashboard
-  </h1>
-  <p class="sub">Add students, generate class files, and manage your cohort.</p>
-
-  <!-- ── STEP 1: ADD STUDENTS ── -->
-  <div class="card">
-    <div class="card-title">1. Add Students</div>
-    <p style="font-size:13px;color:#6b7280;margin-bottom:10px;">
-      Paste one student per line. Format: <strong>Name, email</strong> (email is optional).
-    </p>
-    <textarea id="student-input" placeholder="Alice Smith, alice@example.com&#10;Bob Jones, bob@example.com&#10;Charlie Lee"></textarea>
-
-    <div style="margin-top:14px;">
-      <div style="font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">Default password for all students:</div>
-      <input type="text" id="default-password" value="qapilot123" style="width:200px;">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <span class="badge">QA Pilot</span>
+      Trainer Dashboard
     </div>
-
-    <div style="margin-top:14px;">
-      <div style="font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">Role:</div>
-      <select id="student-role" style="width:160px;">
-        <option value="junior">Junior QA</option>
-        <option value="senior">Senior QA</option>
-      </select>
-    </div>
-
-    <div style="margin-top:14px;">
-      <div style="font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;">Courses to enroll them in:</div>
-      <div class="course-checkboxes" id="course-list"></div>
-    </div>
-
-    <div class="row">
-      <button class="btn btn-primary" onclick="addStudents()">➕ Add Students</button>
-      <span id="student-count" style="font-size:13px;color:#9ca3af;"></span>
-    </div>
-
-    <div class="student-list" id="student-entries"></div>
-  </div>
-
-  <!-- ── STEP 2: DOWNLOAD CLASS FILE ── -->
-  <div class="card" style="border:2px solid #2563eb;background:#f8faff;">
-    <div class="card-title" style="color:#2563eb;">2. Download Class File</div>
-    <p style="font-size:14px;color:#374151;margin-bottom:16px;">
-      You've added <strong id="download-count">0</strong> student(s). Generate a single file they'll use to log in.
-    </p>
-    <button class="btn btn-success btn-lg" onclick="downloadClassFile()" id="download-btn" disabled>
-      ⬇ Download Class File
-    </button>
-  </div>
-
-  <!-- ── STEP 3: INSTRUCTIONS ── -->
-  <div class="card instructions">
-    <div class="card-title">3. What to do with this file</div>
-    <ol>
-      <li><strong>Send</strong> the downloaded <span class="file-name">.json</span> file to your students (email, Teams, shared drive).</li>
-      <li>Your team opens <strong>simple-login.html</strong> — they <strong>upload the file</strong>, type their <strong>name</strong>, and click <strong>Login</strong>.</li>
-      <li>No passwords, no email needed on their end. The file links them to their account.</li>
-      <li>Once logged in, they'll see their courses and can start training immediately.</li>
-      <li>When they finish, they can export their progress and send it back to you.</li>
-    </ol>
-  </div>
-
-  <!-- ── CLEAR ALL DATA ── -->
-  <div class="card" style="border-color:#fecaca;">
-    <div class="card-title" style="color:#dc2626;">Clear All Data</div>
-    <p style="font-size:13px;color:#6b7280;margin-bottom:12px;">
-      This will delete ALL students, progress, and enrollments from the local database.
-      Only do this if you want to start fresh.
-    </p>
-    <button class="btn btn-danger" onclick="confirmClear()">🗑 Clear All Student Data</button>
-  </div>
-</div>
-
-<!-- CONFIRM MODAL -->
-<div class="overlay" id="confirm-modal">
-  <div class="modal">
-    <h3 style="font-size:18px;color:#dc2626;">Clear All Data?</h3>
-    <p>This cannot be undone. All students, progress records, and enrollments will be permanently deleted.</p>
-    <div class="btns">
-      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-danger" onclick="clearAllData()">Yes, Clear Everything</button>
+    <div class="topbar-right">
+      <a href="dashboard.html" class="btn-switch-dash">⚙ Full Dashboard</a>
+      <a href="../simple-login.html" class="btn-logout">🚪 Log out</a>
     </div>
   </div>
-</div>
+
+  <div class="main-content">
+    <h1 class="page-title">👩‍🏫 Trainer Dashboard</h1>
+
+    <!-- STEP 1 -->
+    <div class="card card-step">
+      <div class="card-title">1. Add Students</div>
+      <p style="font-size:var(--text-sm);color:var(--color-ink-soft);margin-bottom:var(--space-3);">
+        Paste one student per line. Format: <strong>Name, email</strong> (email is optional).
+      </p>
+      <textarea id="student-input" placeholder="Alice Smith, alice@example.com&#10;Bob Jones&#10;Charlie Lee, charlie@example.com"></textarea>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Default Password</label>
+          <input type="text" id="default-password" value="qapilot123" style="width:160px;">
+        </div>
+        <div class="form-group">
+          <label>Role</label>
+          <select id="student-role" style="width:140px;">
+            <option value="junior">Junior QA</option>
+            <option value="senior">Senior QA</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:var(--space-3);">
+        <div style="font-size:var(--text-xs);font-weight:var(--weight-bold);color:var(--color-ink-soft);margin-bottom:var(--space-2);text-transform:uppercase;letter-spacing:0.04em;">
+          Courses to enroll them in
+        </div>
+        <div class="course-checkboxes" id="course-list"></div>
+      </div>
+
+      <div style="display:flex;gap:var(--space-3);align-items:center;margin-top:var(--space-4);">
+        <button class="btn btn-primary" onclick="addStudents()">➕ Add Students</button>
+        <span class="student-count" id="student-count"></span>
+      </div>
+
+      <div class="student-list" id="student-entries">
+        <div class="empty-state">No students added yet.</div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="card download-card">
+      <div class="card-title">2. Download Class File</div>
+      <p style="font-size:var(--text-sm);color:var(--color-ink-soft);margin-bottom:var(--space-4);">
+        You've added <strong id="download-count" style="color:var(--color-primary);">0</strong> student(s).
+      </p>
+      <button class="btn-download" id="download-btn" disabled onclick="downloadClassFile()">
+        ⬇ Download Class File
+      </button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="card instructions">
+      <div class="card-title">3. What's Next</div>
+      <ol>
+        <li><strong>Send</strong> the downloaded <span class="file-code">.json</span> file to your students (email, Teams, shared drive).</li>
+        <li>Your team goes to <strong>simple-login.html</strong> — they <strong>upload the file</strong>, type their <strong>name</strong>, and click <strong>Login</strong>.</li>
+        <li>No passwords needed on their end. The file links them to their account automatically.</li>
+        <li>Once logged in, they'll see their courses and can start training immediately.</li>
+        <li>When they finish, they can export their progress and send it back to you for review.</li>
+      </ol>
+    </div>
+
+    <!-- CLEAR -->
+    <div class="card" style="border-color:var(--color-error-border);">
+      <div class="card-title" style="color:var(--color-error);">Clear All Data</div>
+      <p style="font-size:var(--text-sm);color:var(--color-ink-soft);margin-bottom:var(--space-4);">
+        Deletes ALL students, progress, and enrollments from the local database. Only do this to start fresh.
+      </p>
+      <button class="btn btn-danger" onclick="confirmClear()">🗑 Clear All Student Data</button>
+    </div>
+  </div>
+
+  <!-- CONFIRM MODAL -->
+  <div class="overlay" id="confirm-modal">
+    <div class="modal">
+      <h3>🗑 Clear All Data?</h3>
+      <p>This cannot be undone. All students, progress records, and enrollments will be permanently deleted from this device.</p>
+      <div class="btns">
+        <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="clearAllData()">Yes, Clear Everything</button>
+      </div>
+    </div>
+  </div>
 
 <script src="../js/db.js"></script>
 <script data-cfasync="false">
-// ── Course list (hardcoded subset of active courses) ──
 var ACTIVE_COURSES = [
   { id: 'qa-onboarding', title: 'QA Onboarding Training' },
   { id: 'qa-onboarding-advanced', title: 'QA Onboarding — Advanced' },
@@ -276,75 +433,59 @@ var ACTIVE_COURSES = [
 
 var _addedStudents = [];
 
-/** Render course checkboxes */
 function renderCourses() {
   var html = '';
   ACTIVE_COURSES.forEach(function(c, i) {
-    html += '<label><input type="checkbox" value="' + c.id + '"' + (i === 0 ? ' checked' : '') + '>' +
-      '<span>' + c.title + '</span></label>';
+    html += '<label><input type="checkbox" value="' + c.id + '"' + (i === 0 ? ' checked' : '') + '><span>' + c.title + '</span></label>';
   });
   document.getElementById('course-list').innerHTML = html;
 }
 
-/** Parse textarea, create students, add to list */
 async function addStudents() {
   var raw = document.getElementById('student-input').value.trim();
   if (!raw) { showToast('Paste at least one student name.', 'error'); return; }
 
-  var lines = raw.split('\n').map(function(l) { return l.trim(); }).filter(function(l) { return l; });
+  var lines = raw.split('\n').filter(function(l) { return l.trim(); });
   var password = document.getElementById('default-password').value.trim() || 'qapilot123';
   var role = document.getElementById('student-role').value;
 
-  // Get checked courses
   var courseIds = [];
-  document.querySelectorAll('#course-list input:checked').forEach(function(cb) {
-    courseIds.push(cb.value);
-  });
+  document.querySelectorAll('#course-list input:checked').forEach(function(cb) { courseIds.push(cb.value); });
   if (courseIds.length === 0) { showToast('Select at least one course.', 'error'); return; }
 
   var added = 0;
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i];
-    // Parse "Name, email" or just "Name"
+  lines.forEach(function(line) {
     var parts = line.split(',').map(function(s) { return s.trim(); });
     var name = parts[0];
+    if (!name) return;
     var email = parts.length > 1 ? parts[1] : (name.toLowerCase().replace(/\s+/g, '.') + '@student.local');
-
-    // Generate a simple caseId
-    var caseNum = 10000 + _addedStudents.length + 1;
+    var caseNum = 10000 + _addedStudents.length + added + 1;
     var caseId = 'CASE-' + String(caseNum).padStart(5, '0');
-
-    _addedStudents.push({
-      caseId: caseId,
-      name: name,
-      email: email,
-      password: password,
-      role: role,
-      courseIds: courseIds.slice(),
-    });
+    _addedStudents.push({ caseId: caseId, name: name, email: email, password: password, role: role, courseIds: courseIds.slice() });
     added++;
-  }
+  });
 
   document.getElementById('student-input').value = '';
   renderStudentList();
   updateDownloadBtn();
-  showToast('Added ' + added + ' student(s).', 'success');
+  showToast('Added ' + added + ' student' + (added !== 1 ? 's' : '') + '.', 'success');
 }
 
 function renderStudentList() {
   var container = document.getElementById('student-entries');
   if (_addedStudents.length === 0) {
-    container.innerHTML = '<div class="empty-state">No students added yet.</div>';
+    container.innerHTML = '<div class="empty-state">No students added yet. Paste names above and click Add Students.</div>';
+    document.getElementById('student-count').textContent = '';
     return;
   }
   var html = '';
   _addedStudents.forEach(function(s, idx) {
     html += '<div class="student-row">' +
-      '<span class="badge badge-blue">' + s.caseId + '</span>' +
+      '<span class="badge badge-primary" style="font-family:monospace;font-size:10px;">' + s.caseId + '</span>' +
       '<strong>' + escapeHtml(s.name) + '</strong>' +
-      '<span style="color:#9ca3af;font-size:13px;">' + escapeHtml(s.email) + '</span>' +
-      '<span style="margin-left:auto;font-size:12px;color:#6b7280;">' + s.role + '</span>' +
-      '<button class="btn btn-ghost" style="padding:4px 10px;font-size:12px;" onclick="removeStudent(' + idx + ')">✕</button>' +
+      '<span style="color:var(--color-ink-muted);font-size:var(--text-xs);">' + escapeHtml(s.email) + '</span>' +
+      '<span style="margin-left:auto;font-size:var(--text-xs);color:var(--color-ink-soft);text-transform:capitalize;">' + s.role + '</span>' +
+      '<button class="btn btn-ghost" style="padding:2px 8px;font-size:12px;line-height:1.4;" onclick="removeStudent(' + idx + ')">✕</button>' +
     '</div>';
   });
   container.innerHTML = html;
@@ -359,27 +500,17 @@ function removeStudent(idx) {
 
 function updateDownloadBtn() {
   var btn = document.getElementById('download-btn');
-  var count = document.getElementById('download-count');
-  count.textContent = _addedStudents.length;
+  document.getElementById('download-count').textContent = _addedStudents.length;
   btn.disabled = _addedStudents.length === 0;
 }
 
-/** Generate and download class file */
 function downloadClassFile() {
   if (_addedStudents.length === 0) { showToast('Add at least one student first.', 'error'); return; }
 
   var students = _addedStudents.map(function(s) {
-    return {
-      caseId: s.caseId,
-      name: s.name,
-      email: s.email,
-      role: s.role,
-    };
+    return { caseId: s.caseId, name: s.name, email: s.email, role: s.role };
   });
-
-  // Use the course IDs from the first student (they all have same courses)
   var courseIds = _addedStudents[0].courseIds;
-
   var payload = {
     setupVersion: '2.0-simple',
     generatedDate: new Date().toISOString(),
@@ -387,27 +518,21 @@ function downloadClassFile() {
     courseIds: courseIds,
   };
 
-  var label = 'cohort';
   var date = new Date().toISOString().split('T')[0];
-  var fileName = 'qa-pilot-class-' + label + '-' + date + '.json';
+  var fileName = 'qa-pilot-class-cohort-' + date + '.json';
   var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   var url = URL.createObjectURL(blob);
   var link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
+  link.href = url; link.download = fileName;
+  document.body.appendChild(link); link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
-
-  showToast('✓ Downloaded: ' + fileName + ' (' + _addedStudents.length + ' students)', 'success');
+  showToast('✓ Downloaded ' + fileName + ' (' + _addedStudents.length + ' students)', 'success');
 }
 
-/** Clear all IndexedDB data */
 async function clearAllData() {
   closeModal();
   try {
-    // Delete the database entirely
     var req = indexedDB.deleteDatabase('qa_onboarding_db');
     req.onsuccess = function() {
       _addedStudents = [];
@@ -416,24 +541,13 @@ async function clearAllData() {
       document.getElementById('student-input').value = '';
       showToast('✓ All data cleared. Refresh the page to start fresh.', 'success');
     };
-    req.onerror = function() {
-      showToast('Error clearing database.', 'error');
-    };
-    req.onblocked = function() {
-      showToast('Close other tabs first, then try again.', 'error');
-    };
-  } catch(e) {
-    console.error('clearAllData failed:', e);
-    showToast('Failed to clear data.', 'error');
-  }
+    req.onerror = function() { showToast('Error clearing database.', 'error'); };
+    req.onblocked = function() { showToast('Close other tabs first, then try again.', 'error'); };
+  } catch(e) { showToast('Failed to clear data.', 'error'); }
 }
 
-function confirmClear() {
-  document.getElementById('confirm-modal').classList.add('open');
-}
-function closeModal() {
-  document.getElementById('confirm-modal').classList.remove('open');
-}
+function confirmClear() { document.getElementById('confirm-modal').classList.add('open'); }
+function closeModal() { document.getElementById('confirm-modal').classList.remove('open'); }
 
 function showToast(msg, type) {
   var t = document.createElement('div');
@@ -449,7 +563,6 @@ function escapeHtml(text) {
   return d.innerHTML;
 }
 
-// ── Bootstrap ──
 renderCourses();
 renderStudentList();
 updateDownloadBtn();
