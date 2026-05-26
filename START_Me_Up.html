@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>QA Pilot — Loading…</title>
+
+        <!--
+        QA Pilot Launcher
+        =================
+        Purpose:
+            Provide a friendly, obviously-named entry point for non-technical
+            users who receive the QA Pilot folder. Double-clicking this file
+            instantly forwards them to index.html, which is the real start of
+            the platform.
+
+        Why this file exists:
+            When QA Pilot is zipped and sent, recipients often see a folder of
+            HTML files and aren't sure which one to open. "OpenMeFirst.html"
+            removes that ambiguity. It does NOT duplicate index.html — it just
+            points to it, so there is only one source of truth.
+
+        How it works:
+            The <meta http-equiv="refresh"> tag below tells the browser to
+            navigate to index.html immediately (0-second delay). This is the
+            most reliable redirect method when running from file:// because it
+            does not depend on JavaScript and is not blocked by file-origin
+            security restrictions in any modern browser.
+
+        Maintenance:
+            None required. This file never needs to be edited again unless
+            index.html is ever renamed or moved.
+    -->
+
+        <!-- Redirect immediately to index.html (the real start of QA Pilot) -->
+        <meta http-equiv="refresh" content="0; url=index.html" />
+
+        <!-- Fallback link in case the meta refresh fails for any reason
+         (extremely rare, but harmless to include) -->
+    </head>
+    <body>
+        <p>
+            Loading QA Pilot… If nothing happens,
+            <a href="index.html">click here</a>.
+        </p>
+    </body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capstone Assessment | QA Pilot Academy</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* ── CAPSTONE REDIRECT PAGE ──────────────────────────────────────── */
+        /* V1.5: Replaced the old getOSContent() srcdoc embed with a simple
+           redirect page.  The OS now loads directly as QASimulator.html. */
+
+        .capstone-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--color-surface, #f5f5f5);
+        }
+
+        .capstone-card {
+            background: var(--color-white, #fff);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 48px 40px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .capstone-card h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            color: var(--color-ink, #1a1a1a);
+        }
+
+        .capstone-card p {
+            font-size: 0.95rem;
+            color: var(--color-ink-soft, #666);
+            margin: 0 0 24px 0;
+            line-height: 1.5;
+        }
+
+        /* Loading spinner */
+        .capstone-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--color-border, #ddd);
+            border-top-color: var(--color-primary, #2563eb);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: capstone-spin 0.8s linear infinite;
+        }
+
+        @keyframes capstone-spin { to { transform: rotate(360deg); } }
+
+        /* Error state — hidden by default */
+        #capstone-error {
+            display: none;
+        }
+
+        #capstone-error .error-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        #capstone-error h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0 0 6px 0;
+            color: var(--color-danger, #dc2626);
+        }
+
+        #capstone-error p {
+            font-size: 0.9rem;
+            color: var(--color-ink-soft, #666);
+            margin: 0;
+        }
+
+        #capstone-error .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 20px;
+            background: var(--color-primary, #2563eb);
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        #capstone-error .back-link:hover {
+            background: var(--color-primary-hover, #1d4ed8);
+        }
+
+        #capstone-loading {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="capstone-container">
+        <div class="capstone-card">
+            <!-- Loading state -->
+            <div id="capstone-loading">
+                <div class="capstone-spinner"></div>
+                <h1>Preparing Your Capstone</h1>
+                <p>Please wait while we verify your progress and load the assessment environment.</p>
+            </div>
+
+            <!-- Error state — shown when the student isn't ready -->
+            <div id="capstone-error">
+                <div class="error-icon">⚠️</div>
+                <h2>Capstone Not Available</h2>
+                <p id="capstone-error-msg">
+                    You need to complete all lessons before accessing the capstone assessment.
+                </p>
+                <a class="back-link" href="portal.html">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+    // ── CAPSTONE REDIRECT LOGIC ──────────────────────────────────────────
+    // V1.5: Verify the student is ready, then redirect to QASimulator.html
+    // in capstone mode.  If the student hasn't completed prerequisites,
+    // show an inline error instead of a broken page.
+    //
+    // This replaces the old getOSContent() srcdoc iframe approach entirely.
+    // The OS now loads as a separate page with ?mode=capstone.
+
+    (function () {
+        var loadingEl = document.getElementById("capstone-loading");
+        var errorEl   = document.getElementById("capstone-error");
+
+        /**
+         * isCapstoneUnlocked(progress)
+         * Checks whether the student has completed enough work to attempt
+         * the capstone.  For legacy QA Onboarding this means >= 4 lessons
+         * complete.  For multi-course progress, checks any course for
+         * sufficient completion.
+         *
+         * @param {Object} progress - The progress record from getProgress().
+         * @returns {boolean} True if capstone should be accessible.
+         */
+        function isCapstoneUnlocked(progress) {
+            if (!progress) return false;
+            // Legacy: flat lessonsComplete array
+            if (Array.isArray(progress.lessonsComplete) && progress.lessonsComplete.length >= 4) {
+                return true;
+            }
+            // Multi-course: any course with enough sub-modules complete
+            if (progress.courses) {
+                var courseIds = Object.keys(progress.courses);
+                for (var i = 0; i < courseIds.length; i++) {
+                    var course = progress.courses[courseIds[i]];
+                    if (course && course.subModulesComplete &&
+                        course.subModulesComplete.length >= 4) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // Boot sequence
+        initDB()
+            .then(function () {
+                var session = requireLogin();
+                if (!session) return; // requireLogin redirects if no session
+                return getProgress(session.caseId);
+            })
+            .then(function (progress) {
+                if (!progress) {
+                    // No progress record — student hasn't started any course
+                    loadingEl.style.display = "none";
+                    errorEl.style.display = "block";
+                    return;
+                }
+                if (!isCapstoneUnlocked(progress)) {
+                    loadingEl.style.display = "none";
+                    errorEl.style.display = "block";
+                    return;
+                }
+                // All checks passed — redirect to the OS in capstone mode
+                window.location.href = "QASimulator.html?mode=capstone";
+            })
+            .catch(function (err) {
+                console.error("[capstone] Redirect failed:", err);
+                loadingEl.style.display = "none";
+                errorEl.style.display = "block";
+                document.getElementById("capstone-error-msg").textContent =
+                    "An unexpected error occurred. Please try again or contact your training coordinator.";
+            });
+    })();
+    </script>
+</body>
+</html>
