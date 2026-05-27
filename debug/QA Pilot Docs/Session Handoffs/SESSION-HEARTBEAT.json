@@ -1,23 +1,29 @@
 {
   "version": 2,
-  "timestamp": "2026-05-26T14:30:00Z",
-  "current_task": "S0-02 E2E test v2.0 enrollment flow completed",
-  "current_step": "All steps passed — checkpoint written",
+  "timestamp": "2026-05-27T15:30:00Z",
+  "current_task": "Debug Sprint: Course quizzes, capstone path, UI cleanup",
+  "current_step": "All done — fixes applied, build regenerated",
   "step_progress": "Done",
   "files_touched": [
+    "capstone-2.html",
+    "data/content.js",
     "debug/QA Pilot Docs/Session Handoffs/SESSION-HANDOFF.md",
     "debug/QA Pilot Docs/Session Handoffs/SESSION-HEARTBEAT.json",
-    "debug/QA Pilot Docs/PULSE/feature-status.md"
+    "debug/QA Pilot Docs/PULSE/feature-status.md",
+    "desktop/dist.html",
+    "desktop/os.bundle.js",
+    "os.bundle.js",
+    "QASimulator.html"
   ],
-  "last_checkpoint": "2026-05-26T14:30:00Z",
-  "turns_taken": 12,
+  "last_checkpoint": "2026-05-27T15:30:00Z",
+  "turns_taken": 30,
   "turns_since_checkpoint": 0,
-  "proximity_level": "green",
+  "proximity_level": "yellow",
   "status": "completed",
   "build_required": false,
   "recovery": {
     "auto_continue": false,
-    "fallback_action": "Continue with next priorities: firstLogin flag in portal.html, per-student Setup File button, case-001 polyfill, Teams F7 scripted replies."
+    "fallback_action": "Verify courses load correctly, test capstones, check quiz functionality."
   },
   "proximity_thresholds": {
     "green_max_turns": 15,

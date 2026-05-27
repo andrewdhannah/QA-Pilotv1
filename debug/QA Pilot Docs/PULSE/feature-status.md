@@ -3,6 +3,32 @@
 
 ---
 
+## Session May 27 — Debug Sprint: Course Quiz Questions + Capstone Fix + UI Cleanup
+
+| Component | Status | Last Verified | Notes |
+|-----------|--------|---------------|-------|
+| Capstone scenario script path | ✅ FIXED | 2026-05-27 | `capstone-2.html` script src changed from `desktop/scenarios/capstone-scenario-2.js` to `scenarios/capstone-scenario-2.js`. File exists at root level, not in desktop/. |
+| Course quizzes: dynamics-crm-basics | ✅ ADDED | 2026-05-27 | 15 questions (5 per module) added to COURSE_QUIZZES. Covers case form, case data, and BPF topics. |
+| Course quizzes: ado-bug-reports | ✅ ADDED | 2026-05-27 | 15 questions (5 per module) added to COURSE_QUIZZES. Covers bug anatomy, repro steps, severity/priority. |
+| Course quizzes: acceptance-criteria-basics | ✅ ADDED | 2026-05-27 | 15 questions (5 per module) added to COURSE_QUIZZES. Covers AC basics, Given/When/Then, traceability. |
+| Course quizzes: teams-for-qa | ✅ ADDED | 2026-05-27 | 10 questions (5 per module) added to COURSE_QUIZZES. Covers Teams navigation and stand-up communication. |
+| Course quizzes: agile-scrum-qa | ✅ ADDED | 2026-05-27 | 20 questions (5 per module across 4 modules) added to COURSE_QUIZZES. Covers ceremonies, QA role, AC practice, testing mindset. |
+| Redundant "Already completed" text removed | ✅ REMOVED | 2026-05-27 | Removed from QA Onboarding capstone overview and QA Advanced capstone overview (content.js). "Complete Course →" button remains as sole action. |
+| Build regenerated | ✅ BUILT | 2026-05-27 | `node build.js` passed. capstone-2.html getOSContent synced. |
+| Syntax verification | ✅ PASSED | 2026-05-27 | All modified JS files pass `node --check`: content.js, quiz-questions.js, course-view.html, db.js, app.js, clippy-guide.js, os-core.js |
+
+---
+
+## Session May 26 — Setup File Removed from Main Login + Toggle to Simple Login
+
+| Component | Status | Last Verified | Notes |
+|-----------|--------|---------------|-------|
+| Setup file upload section removed from `index.html` | ✅ REMOVED | 2026-05-26 | Entire `#setup-file-section` (upload area, class email lookup) removed. Flow lives in `simple-login.html`. |
+| "Have a setup file?" footer link replaced | ✅ CHANGED | 2026-05-26 | Now links to `simple-login.html` as "Team login (class file)" |
+| Team Login toggle below demo button | ✅ ADDED | 2026-05-26 | "📁 Using a class file? Use Team Login →" link styled as dashed card |
+| Dead JS code cleaned up | ✅ REMOVED | 2026-05-26 | ~279 lines removed: `maybeShowSetupFileSection`, `toggleSetupFileSection`, `handleSetupFileLoad`, `submitClassEmailLookup`, `processSetupFile`, `showSetupStatus`, `_pendingClassData` |
+| Build regenerated | ✅ BUILT | 2026-05-26 | `node build.js` passed |
+
 ## Sprint 1 — Auth & Security (Session May 26)
 
 | Component | Status | Last Verified | Notes |

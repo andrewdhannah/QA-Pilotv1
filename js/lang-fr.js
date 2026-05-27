@@ -89,10 +89,16 @@ var LANG_FR = {
 
   'portal_category_general':          'G\u00e9n\u00e9ral',
 
-  'portal_cat_QA_title':              'Fondamentaux du QA',
-  'portal_cat_QA_desc':               'Cours ax\u00e9s sur les comp\u00e9tences et les meilleures pratiques en assurance qualit\u00e9.',
-  'portal_cat_Development_title':     'D\u00e9veloppement et collaboration',
-  'portal_cat_Development_desc':      'Cours couvrant les m\u00e9thodologies de d\u00e9veloppement et les pratiques de collaboration d\u2019\u00e9quipe.',
+   'portal_cat_QA_title':              'Fondamentaux du QA',
+   'portal_cat_QA_desc':               'Cours ax\u00e9s sur les comp\u00e9tences et les meilleures pratiques en assurance qualit\u00e9.',
+   'portal_cat_Fundamentals_title':    'Fondamentaux',
+   'portal_cat_Fundamentals_desc':     'Compétences de base en QA incluant les critères d\'acceptation, CRM et les bases de DevOps.',
+    'portal_cat_Tools & Process_title': 'Outils & Processus',
+    'portal_cat_Tools & Process_desc':  'Formation sur les outils et processus spécifiques utilisés dans les flux de travail QA.',
+   'portal_cat_Development_title':     'D\u00e9veloppement et collaboration',
+   'portal_cat_Development_desc':      'Cours couvrant les m\u00e9thodologies de d\u00e9veloppement et les pratiques de collaboration d\u2019\u00e9quipe.',
+   'portal_cat_Scenarios_title':       'Scénarios',
+   'portal_cat_Scenarios_desc':        'Cours basés sur des scénarios réels pour une expérience pratique en QA.',
 
 
   // ── COURSE VIEWER (course-view.html) ────────────────────────────────────────

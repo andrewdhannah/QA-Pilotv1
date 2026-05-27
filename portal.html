@@ -1598,6 +1598,31 @@
       flex: 1;
     }
 
+    /* ── MODAL OVERLAY (shared pattern with admin dashboard) ────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal-panel {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 480px;
+      padding: var(--space-8);
+      position: relative;
+    }
+
     /* ── STUDENT WALKTHROUGH WIZARD ──────────────────────────────────── */
     .swiz-step { min-height: 200px; }
 
@@ -2365,16 +2390,17 @@
       // Display order for enrolled courses inside each category tray.
       // Any course not listed here sorts last (orderValue 999).
       var courseIdOrder = {
-        'acceptance-criteria-basics': 1,
-        'dynamics-crm-basics':       2,
-        'ado-bug-reports':           3,
-        'teams-for-qa':              4,
-        'agile-scrum-qa':            5,
-        'scenario-deep-dive':        6,
-        'bug-lifecycle':             7,
-        'capstone-1':                8,
-        'capstone-2':                9,
-        'qa-onboarding-advanced':   10,
+        'qa-onboarding':              1,
+        'qa-onboarding-advanced':     2,
+        'acceptance-criteria-basics': 3,
+        'dynamics-crm-basics':        4,
+        'ado-bug-reports':            5,
+        'teams-for-qa':               6,
+        'agile-scrum-qa':             7,
+        'scenario-deep-dive':         8,
+        'bug-lifecycle':              9,
+        'capstone-1':                10,
+        'capstone-2':                11,
       };
       Object.keys(categoryGroups).forEach(function(cat) {
         categoryGroups[cat].sort(function(a, b) {
@@ -2385,7 +2411,7 @@
       });
 
       // Ordered category keys for consistent display
-      var catOrder = ['Fundamentals', 'Tools & Process', 'Scenarios', 'General'];
+      var catOrder = ['QA', 'Fundamentals', 'Tools & Process', 'Development', 'Scenarios'];
       var sortedCats = catOrder.filter(function(k) { return categoryGroups[k]; });
       Object.keys(categoryGroups).forEach(function(k) {
         if (sortedCats.indexOf(k) === -1) sortedCats.push(k);
@@ -2577,16 +2603,17 @@
 
       // Sort courses within each category by courseId priority
       var courseIdOrder = {
-        'acceptance-criteria-basics': 1,
-        'dynamics-crm-basics': 2,
-        'ado-bug-reports': 3,
-        'teams-for-qa': 4,
-        'agile-scrum-qa': 5,
-        'scenario-deep-dive': 6,
-        'bug-lifecycle': 7,
-        'capstone-1': 8,
-        'capstone-2': 9,
-        'qa-onboarding-advanced': 10,
+        'qa-onboarding':              1,
+        'qa-onboarding-advanced':     2,
+        'acceptance-criteria-basics': 3,
+        'dynamics-crm-basics':        4,
+        'ado-bug-reports':            5,
+        'teams-for-qa':               6,
+        'agile-scrum-qa':             7,
+        'scenario-deep-dive':         8,
+        'bug-lifecycle':              9,
+        'capstone-1':                10,
+        'capstone-2':                11,
       };
       Object.keys(groups).forEach(function(cat) {
         groups[cat].sort(function(a, b) {
@@ -2600,34 +2627,34 @@
       console.log('[Demo] isDemo:', isDemo, 'demoCourseMode:', demoCourseMode);
       console.log('[Demo] Available courses before filtering:', available.map(function(c) { return c.courseId; }));
 
-      if (isDemo && demoCourseMode === 'first-only') {
-        console.log('[Demo] Applying first-only filtering...');
-        // Find the first course across all sorted categories
-        var firstCourse = null;
-        var categoryOrder = ['Fundamentals', 'Tools & Process', 'Scenarios', 'General'];
-        for (var i = 0; i < categoryOrder.length; i++) {
-          if (groups[categoryOrder[i]] && groups[categoryOrder[i]].length > 0) {
-            firstCourse = groups[categoryOrder[i]][0];
-            console.log('[Demo] Found first course:', firstCourse.courseId);
-            break;
-          }
-        }
-        // Reset groups to only show the first course
-        groups = {};
-        if (firstCourse) {
-          var cat = firstCourse.category || 'General';
-          groups[cat] = [firstCourse];
-          console.log('[Demo] Groups after filtering:', Object.keys(groups));
-        }
-      }
+       if (isDemo && demoCourseMode === 'first-only') {
+         console.log('[Demo] Applying first-only filtering...');
+         // Find the first course across all sorted categories
+         var firstCourse = null;
+         var categoryOrder = ['QA', 'Fundamentals', 'Tools & Process', 'Development', 'Scenarios'];
+         for (var i = 0; i < categoryOrder.length; i++) {
+           if (groups[categoryOrder[i]] && groups[categoryOrder[i]].length > 0) {
+             firstCourse = groups[categoryOrder[i]][0];
+             console.log('[Demo] Found first course:', firstCourse.courseId);
+             break;
+           }
+         }
+         // Reset groups to only show the first course
+         groups = {};
+         if (firstCourse) {
+           var cat = firstCourse.category || 'General';
+           groups[cat] = [firstCourse];
+           console.log('[Demo] Groups after filtering:', Object.keys(groups));
+         }
+       }
 
-      // Ordered category keys for consistent display
-      var categoryOrder = ['Fundamentals', 'Tools & Process', 'Scenarios', 'General'];
-      var sortedCats = categoryOrder.filter(function(k) { return groups[k]; });
-      // Any remaining categories not in the order list
-      Object.keys(groups).forEach(function(k) {
-        if (sortedCats.indexOf(k) === -1) sortedCats.push(k);
-      });
+       // Ordered category keys for consistent display
+       var categoryOrder = ['QA', 'Fundamentals', 'Tools & Process', 'Development', 'Scenarios'];
+       var sortedCats = categoryOrder.filter(function(k) { return groups[k]; });
+       // Any remaining categories not in the order list
+       Object.keys(groups).forEach(function(k) {
+         if (sortedCats.indexOf(k) === -1) sortedCats.push(k);
+       });
 
       sortedCats.forEach(function(cat) {
         var coursesInGroup = groups[cat];
@@ -2643,11 +2670,12 @@
         if (catTitle === catTitleKey) catTitle = cat;
         if (catDesc === catDescKey) catDesc = '';
 
-        var groupClass = 'group-qa';
-        if (cat === 'Fundamentals') groupClass = 'group-fundamentals';
-        else if (cat === 'Tools & Process') groupClass = 'group-tools-process';
-        else if (cat === 'Scenarios') groupClass = 'group-scenarios';
-        else if (cat === 'General') groupClass = 'group-general';
+         var groupClass = 'group-qa';
+         if (cat === 'Fundamentals') groupClass = 'group-fundamentals';
+         else if (cat === 'Tools & Process') groupClass = 'group-tools-process';
+         else if (cat === 'Development') groupClass = 'group-development';
+         else if (cat === 'Scenarios') groupClass = 'group-scenarios';
+         else if (cat === 'General') groupClass = 'group-general';
 
         var groupEl = document.createElement('div');
         groupEl.className = 'portal-category-group ' + groupClass;
@@ -3645,8 +3673,8 @@
       setTimeout(openStudentWizard, 600);
     }
 
-    // Wire student wizard button events after DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
+    // Wire student wizard button events (DOM already parsed — script is at end of body)
+    (function() {
       var closeBtn = document.getElementById('student-wizard-close');
       if (closeBtn) closeBtn.onclick = closeStudentWizard;
 
@@ -3658,7 +3686,7 @@
 
       var skipBtn = document.getElementById('student-wizard-skip');
       if (skipBtn) skipBtn.onclick = skipStudentWizardStep;
-    });
+    })();
 
   </script>
 </body>

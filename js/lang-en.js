@@ -102,11 +102,17 @@ var LANG_EN = {
   // Portal category fallback
   'portal_category_general':    'General',
 
-  // Portal category headings (shown above grouped course sections)
-  'portal_cat_QA_title':        'QA Fundamentals',
-  'portal_cat_QA_desc':         'Courses focused on quality assurance testing skills and best practices.',
-  'portal_cat_Development_title': 'Development & Collaboration',
-  'portal_cat_Development_desc':  'Courses covering development methodologies and team collaboration practices.',
+   // Portal category headings (shown above grouped course sections)
+   'portal_cat_QA_title':        'QA Fundamentals',
+   'portal_cat_QA_desc':         'Courses focused on quality assurance testing skills and best practices.',
+   'portal_cat_Fundamentals_title': 'Fundamentals',
+   'portal_cat_Fundamentals_desc':  'Core QA skills including acceptance criteria, CRM, and DevOps basics.',
+    'portal_cat_Tools & Process_title': 'Tools & Process',
+    'portal_cat_Tools & Process_desc':  'Training on specific tools and processes used in QA workflows.',
+   'portal_cat_Development_title': 'Development & Collaboration',
+   'portal_cat_Development_desc':  'Courses covering development methodologies and team collaboration practices.',
+   'portal_cat_Scenarios_title':   'Scenarios',
+   'portal_cat_Scenarios_desc':    'Real-world scenario-based courses for practical QA experience.',
 
 
   // ── COURSE VIEWER (course-view.html) ────────────────────────────────────────

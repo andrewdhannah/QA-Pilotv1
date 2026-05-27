@@ -1,6 +1,6 @@
 # Session Handoff
 
-**Date:** 2026-05-26 (Session 10 — E2E Test Sprint)
+**Date:** 2026-05-27 (Session 12 — Debug Sprint: Courses Stuck, Capstone Loading, UI Cleanup)
 **Goose Scale:** 🟢 CRUISING
 
 ---
@@ -164,58 +164,67 @@ Admin                                   Student
 - The `#class-email-lookup` panel uses inline styles (no CSS class) to keep it self-contained without adding to the stylesheet. Consistent with the existing setup-file-section pattern.
 - v1.0 `generateSetupFile(caseId)` still works and is still shown in the post-creation modal prompt. Both v1 and v2 coexist.
 
+---
 
-## Checkpoint 2026-05-26-01
-- **Date:** 2026-05-26 14:32:00 UTC
-- **Change:** Added custody record schema (`src/custody/custody.js`) and integrity verifier utilities.
-- **Update:** Enhanced SESSION-HANDOFF.md with Session Integrity Checklist and auto‑generated Next Priorities from `session-manifest.json`.
+## Completed (Session 11 — Dashboard Polish + Login Cleanup)
 
---- ---
-
-## Completed (Session 10)
-
-### ✅ Bug Fix: case-001 polyfill — Full scenario content
+### ✅ Setup file upload removed from `index.html`
 
 | What | Where | Status |
 |------|-------|--------|
-| Added `crmState` with 2 embedded bugs (wrong priority, blank resolution) | `scenarios/scenarios-case-001.js` | ✅ Added |
-| Added `acceptanceCriteria` with AC-1.1, AC-2.1 + `acRefs` mapping | `scenarios/scenarios-case-001.js` | ✅ Added |
-| Added `expectedBugs` — `priority-too-low`, `resolved-without-resolution` | `scenarios/scenarios-case-001.js` | ✅ Added |
-| Added `qoutlookEmails` — 2 scenario-relevant emails (Elyse, D365 system) | `scenarios/scenarios-case-001.js` | ✅ Added |
-| Added `teamsThread` — 3 messages (Elyse, Sam, Elyse follow-up) | `scenarios/scenarios-case-001.js` | ✅ Added |
-| Added `trainingMeta` + `trainingSteps` (6-step guided walkthrough) | `scenarios/scenarios-case-001.js` | ✅ Added |
+| Removed `#setup-file-section` HTML block (upload area, class email lookup) | `index.html` | ✅ Removed |
+| Removed "Have a setup file?" footer link | `index.html` footer | ✅ Removed |
+| Added "📁 Using a class file? Use Team Login →" link below demo button | `index.html` form area | ✅ Added |
+| Added "Team login (class file)" link in footer | `index.html` footer | ✅ Added |
+| Removed `maybeShowSetupFileSection()` function | `index.html` JS | ✅ Removed |
+| Removed `toggleSetupFileSection()` function | `index.html` JS | ✅ Removed |
+| Removed `handleSetupFileLoad()`, `submitClassEmailLookup()`, `processSetupFile()`, `showSetupStatus()` | `index.html` JS | ✅ Removed |
+| Removed `_pendingClassData` module variable | `index.html` JS | ✅ Removed |
+| Removed `maybeShowSetupFileSection()` call from init chain | `index.html` init | ✅ Removed |
+| Cleaned up dead comment block (SECTION 6) | `index.html` JS | ✅ Removed |
+| Total lines removed: ~279 (1344 → 1065) | — | ✅ Done |
 
-case-001 now matches the structure of case-002 and case-003 with full QOutlook emails, Teams thread, and guided training steps.
+The setup-file/class-file upload flow now lives entirely in `simple-login.html`. The main `index.html` now only shows email/password + Demo + a toggle to `simple-login.html` and the admin link.
 
-### ✅ Priority #1: `firstLogin` flag in portal.html — Auto-prompt password change
+---
 
-| What | Where | Status |
-|------|-------|--------|
-| `checkFirstLogin()` function — shows password panel when `student.firstLogin === true` | `portal.html` | ✅ Added |
-| Init chain — calls `checkFirstLogin()` after all rendering | `portal.html` init chain | ✅ Wired |
-| `changePassword()` clears `firstLogin` flag | `portal.html` `changePassword()` | ✅ Modified |
-| Custom welcome message on first-login prompt | "Welcome! Please set a new password to continue..." | ✅ Shown |
+## Completed (Session 12 — Debug Sprint: Courses Stuck, Capstone Loading, UI Cleanup)
 
-**Flow:** Student logs in for first time → `firstLogin: true` → password panel auto-opens → student sets new password → `firstLogin` cleared → proceeds normally.
-
-### ✅ Student Getting Started Walkthrough
+### ✅ Capstone scenario script path fixed
 
 | What | Where | Status |
 |------|-------|--------|
-| 3-step wizard modal (Welcome → How Courses Work → Completing Training) | `portal.html` (before `</body>`) | ✅ Added |
-| Wizard CSS (.swiz-step, .swiz-dot, .swiz-dot-active) | `portal.html` `<style>` block | ✅ Added |
-| JS functions: open/close/next/back/skip/render/maybeShow | `portal.html` script section | ✅ Added |
-| Auto-shows on first portal load (tracked by `studentWalkthroughDone` setting) | `portal.html` init chain | ✅ Wired |
-| "Getting Started" option in user dropdown menu | `portal.html` user dropdown | ✅ Added |
-| Can be re-opened anytime from user menu | `portal.html` `openStudentWizard()` | ✅ Always available |
+| `capstone-scenario-2.js` path corrected from `desktop/scenarios/` to `scenarios/` | `capstone-2.html:338` | ✅ FIXED |
+| Build regenerated to sync getOSContent() | `node build.js` passed | ✅ BUILT |
 
-### ✅ Release build to QA-PilotV1_5
+Root cause: `<script src="desktop/scenarios/capstone-scenario-2.js">` pointed to a path that doesn't exist. The file lives at `scenarios/capstone-scenario-2.js`. Without this script, the capstone couldn't load any scenario data and hung on the loading screen.
 
-| What | Path | Status |
-|------|------|--------|
-| Clean copy (excluded `src/`, `debug/`, `.git/`) | `/Users/andrew/Desktop/Open Work/QA-PilotV1_5/` | ✅ Done |
-| Build outputs regenerated | `desktop/dist.html`, `QASimulator.html`, `os.bundle.js` | ✅ Built |
-| 99 files, 6.6 MB | — | ✅ Ready for GitHub |
+### ✅ Quiz questions added for all courses missing them
+
+| Course | Modules | Questions | Quiz ID Prefix |
+|--------|---------|-----------|----------------|
+| Introduction to Dynamics CRM | mod-1, mod-2, mod-3 | 15 | `dcrm-m*` |
+| Azure DevOps — Bug Reports | mod-1, mod-2, mod-3 | 15 | `ado-m*` |
+| Acceptance Criteria Fundamentals | mod-1, mod-2, mod-3 | 15 | `ac-m*` |
+| Microsoft Teams for QA | mod-1, mod-2 | 10 | `teams-m*` |
+| Agile & Scrum for QA | mod-1, mod-2, mod-3, mod-4 | 20 | `asqa-m*` |
+
+Root cause: `getQuizQuestions()` in course-view.html checks `COURSE_QUIZZES[coursId][moduleId]`. Only `agile-scrum-dev` (a different course) had entries. All other courses had quiz sub-modules defined but zero questions — students saw "❓ Quiz not available" and couldn't advance past Module 1.
+
+### ✅ UI cleanup (redundant text removed)
+
+| What | Where | Status |
+|------|-------|--------|
+| "Already completed this assessment? Skip ahead..." text removed from QA Onboarding capstone overview | `data/content.js` (course: qa-onboarding) | ✅ REMOVED |
+| Same text removed from QA Advanced capstone overview | `data/content.js` (course: qa-onboarding-advanced) | ✅ REMOVED |
+| "Complete Course →" button remains as sole action in both locations | — | ✅ PRESERVED |
+
+### Edits summary:
+- `capstone-2.html` — 1 edit (script path fix)
+- `data/content.js` — ~1200 lines added (quiz questions), 2 lines removed (redundant text)
+- `build.js` output regenerated (capstone-2.html getOSContent synced)
+
+---
 
 ## Next Priorities (for future sessions)
 
@@ -223,22 +232,3 @@ case-001 now matches the structure of case-002 and case-003 with full QOutlook e
 2. **Excel (.xlsx) export for student records** — SheetJS bundling via build.js
 3. **Teams F7 scripted replies** — end-to-end test pass
 4. **Modular course schema** — extract courses into `courses/` directory with JSON files
-
----
-
-## Session 8 Completed Tasks (for reference)
-
-| Task | Description | Files |
-|------|-------------|-------|
-| **P1** | Instructor email + org name settings | `admin/dashboard.html` |
-| **P1** | `exportStudentData()` — mailto: Outlook path when email is set | `portal.html` |
-| **P2** | `generateSetupFile(caseId)` — per-student JSON setup file | `admin/dashboard.html` |
-| **P2** | `generateAllSetupFiles()` — batch download for all active students | `admin/dashboard.html` |
-| **P2** | Post-creation "Generate Setup File" prompt in Add Student modal | `admin/dashboard.html` |
-| **P3** | Setup file upload section on login page | `index.html` |
-| **P3** | `handleSetupFileLoad()` + `processSetupFile()` — reads file, creates account, enrolls, auto-logs in | `index.html` |
-| **P3** | `maybeShowSetupFileSection()` — auto-reveals upload when no real students exist | `index.html` |
-| **P3** | "Have a setup file?" footer link (always accessible) | `index.html` |
-| **P4** | Getting Started 4-step wizard modal | `admin/dashboard.html` |
-| **P4** | `maybeShowWizard()` — auto-shows on first-ever login | `admin/dashboard.html` |
-| **P5** | Consolidated duplicate import handlers into `handleImportFile(event, source)` | `admin/dashboard.html` |
